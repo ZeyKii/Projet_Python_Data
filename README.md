@@ -14,7 +14,7 @@ Nous utiliserons principalement Python ainsi qu'une combinaison de techniques d'
 ## 📂 Contenu du Répertoire
 - **notebooks/** : Ce répertoire contiendra les notebooks Jupyter utilisés pour l'analyse des données.
 - **results/** : Ce répertoire contiendra les résultats de l'analyse, tels que des graphiques, des tableaux récapitulatifs, etc.
-- **README.md** : Ce fichier README fournira une introduction au projet, des instructions pour reproduire l'analyse, et des informations supplémentaires pertinentes.
+- **README.md** : Ce fichier README fournira une introduction au projet et des informations supplémentaires pertinentes.
 
 ## 👥 Collaborateurs
 - [Médé](https://github.com/MeydeyNc)
