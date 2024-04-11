@@ -183,4 +183,7 @@ poetry.toml
 # LSP config files
 pyrightconfig.json
 
+# Pour Maxime parce que bien sûr il veut faire le mec différent avec son MAC (merci)
+.DS_Store
+
 # End of https://www.toptal.com/developers/gitignore/api/python,database
