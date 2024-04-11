@@ -58,6 +58,7 @@ Le Million Playlist Dataset est créé en échantillonnant des playlists parmi l
 - [Médé](https://github.com/MeydeyNc)
 - [Telos](https://github.com/Telooss)
 - [ZeyKii](https://github.com/ZeyKii)
+- [maxime-boizot](https://github.com/maxime-boizot)
 
 ### Licence
 L'utilisation du Million Playlist Dataset est soumise aux [conditions de licence](https://www.aicrowd.com/challenges/spotify-million-playlist-dataset-challenge/challenge_rules).
