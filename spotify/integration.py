@@ -12,6 +12,7 @@ def create_db_connection():
         return conn
     except Exception as e:
         print("Une erreur est survenue lors de la connexion à la base de données :", e)
+        return e
 
 
 def show_tables(conn):
@@ -37,10 +38,11 @@ def create_or_refresh_db(conn):
             cursor = conn.cursor()
 
             drop_table_queries = [
+                "DROP TABLE IF EXISTS PlaylistTracks;",
+                "DROP TABLE IF EXISTS Playlists;",
                 "DROP TABLE IF EXISTS Tracks;",
                 "DROP TABLE IF EXISTS Albums;",
-                "DROP TABLE IF EXISTS Artists;",
-                "DROP TABLE IF EXISTS Playlists;",
+                "DROP TABLE IF EXISTS Artists;", 
             ]
 
             for query in drop_table_queries:
@@ -80,11 +82,18 @@ def create_or_refresh_db(conn):
                     track_uri VARCHAR(255) PRIMARY KEY,
                     track_name VARCHAR(255),
                     duration_ms BIGINT,
-                    pos INT,
-                    pid INT,
                     album_uri VARCHAR(255),
-                    FOREIGN KEY (pid) REFERENCES Playlists(pid),
                     FOREIGN KEY (album_uri) REFERENCES Albums(album_uri)
+                );
+                """,
+                """
+                CREATE TABLE PlaylistTracks (
+                    playlist_id INT NOT NULL REFERENCES Playlists(pid),
+                    pos INT NOT NULL,
+                    track_uri VARCHAR(255) NOT NULL REFERENCES Tracks(track_uri),
+                    PRIMARY KEY (playlist_id, track_uri),
+                    FOREIGN KEY (playlist_id) REFERENCES Playlists(pid),
+                    FOREIGN KEY (track_uri) REFERENCES Tracks(track_uri)
                 );
                 """,
             ]
@@ -121,7 +130,7 @@ def bulk_insert_playlists(conn, playlists):
 def bulk_insert_albums(conn, albums):
     cursor = conn.cursor()
     insert_query = """
-    INSERT IGNORE INTO Albums (album_uri, album_name, artist_uri)
+    INSERT OR IGNORE INTO Albums (album_uri, album_name, artist_uri)
     VALUES (?, ?, ?)
     """
     cursor.executemany(insert_query, albums)
@@ -132,7 +141,7 @@ def bulk_insert_albums(conn, albums):
 def bulk_insert_artists(conn, artists):
     cursor = conn.cursor()
     insert_query = """
-    INSERT IGNORE INTO Artists (artist_uri, artist_name)
+    INSERT OR IGNORE INTO Artists (artist_uri, artist_name)
     VALUES (?, ?)
     """
     cursor.executemany(insert_query, artists)
@@ -143,16 +152,25 @@ def bulk_insert_artists(conn, artists):
 def bulk_insert_tracks(conn, tracks):
     cursor = conn.cursor()
     insert_query = """
-    INSERT IGNORE INTO Tracks (track_uri, album_uri, track_name, duration_ms, pos, pid)
-    VALUES (?, ?, ?, ?, ?, ?)
+    INSERT OR IGNORE INTO Tracks (track_uri, album_uri, track_name, duration_ms)
+    VALUES (?, ?, ?, ?)
     """
     cursor.executemany(insert_query, tracks)
     conn.commit()
     cursor.close()
 
 
-    # Bulk insert dans la table d'associations PlaylistTrack
-
+    # Bulk insert dans la table d'associations playlist_tracks
+def bulk_insert_association(conn, playlist_tracks):
+    cursor = conn.cursor()
+    insert_query = """
+    INSERT OR IGNORE INTO PlaylistTracks (playlist_id, pos, track_uri)
+    VALUES (?, ?, ?)
+    """
+    cursor.executemany(insert_query, playlist_tracks)
+    conn.commit()
+    cursor.close()
+    
 
 def extract_json(filepath, conn):
     with open(filepath, "r") as f:
@@ -161,9 +179,8 @@ def extract_json(filepath, conn):
         tracks = set()
         albums = set()
         playlists = set()
-        # nouveau set de la table d'association
-            # clef étrangère "pid" de la playlist
-            # clef étrangère "track_uri" de la track
+        playlist_tracks = set() # nouveau set de la table d'association
+            
         for i, playlist in enumerate(data["playlists"], start=1):
             # print(f"Playlist n°{i}/{len(data["playlists"])}: {playlist["name"]}")
             playlists.add(
@@ -187,33 +204,29 @@ def extract_json(filepath, conn):
                         track["track_uri"],
                         track["album_uri"],
                         track["track_name"],
-                        track["duration_ms"],
-                        track["pos"],
-                        playlist["pid"],
+                        track["duration_ms"]                
                     )
                 )
                 albums.add(
                     (track["album_uri"], track["album_name"], track["artist_uri"])
                 )
-
-                # pprint(playlists)
-                # pprint(tracks)
-                # pprint(albums)
-                # pprint(artists)
-                # break
-            # break
+                playlist_tracks.add(
+                    (playlist["pid"], track["pos"], track["track_uri"])
+                    # clef étrangère "pid" de la playlist
+                    # clef étrangère "track_uri" de la track
+                ) 
 
         print("Insertion des playlists...")
         bulk_insert_playlists(conn, list(playlists))
-        # print("Insertion des artistes...")
-        # bulk_insert_artists(conn, list(artists))
-        # print("Insertion des albums...")
-        # bulk_insert_albums(conn, list(albums))
-        # print("Insertion des tracks...")
-        # bulk_insert_tracks(conn, list(tracks))
-
-        # Appel au bulk insert de PlaylistTrack
-
+        print("Insertion des artistes...")
+        bulk_insert_artists(conn, list(artists))
+        print("Insertion des albums...")
+        bulk_insert_albums(conn, list(albums))
+        print("Insertion des tracks...")
+        bulk_insert_tracks(conn, list(tracks))
+        print("Insertion des associations playlists_tracks...") # Appel au bulk insert de PlaylistTrack
+        bulk_insert_association(conn, list(playlist_tracks))
+        print("Fin !")
 
 def process_json_files(conn):
     source_dir = pathlib.Path(__file__).resolve().parent / "sources"
@@ -221,7 +234,7 @@ def process_json_files(conn):
         if element.is_file():
             print(f"Fichier: {element}")
             extract_json(element, conn)
-        if i == 10:
+        if i == 5:
             break
 
 
