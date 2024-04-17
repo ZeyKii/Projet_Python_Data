@@ -8,7 +8,7 @@ from rich.pretty import pprint
 
 def create_db_connection():
     try:
-        conn = duckdb.connect('D:\Repo\Projet_Python_Data\playlists.db')
+        conn = duckdb.connect('playlists.db')
         return conn
     except Exception as e:
         print("Une erreur est survenue lors de la connexion à la base de données :", e)
