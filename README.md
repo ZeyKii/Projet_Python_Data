@@ -39,6 +39,8 @@ python3 integration.py
 Jusqu'ici rien de complexe mais comme on a utiliser `DuckDB` voici les commandes utiles :
 
 ```sql
+duckdb //Ouvre DuckDB
+
 .open playlists.db //Ouvre le fichier de la DB
 
 SHOW tables; //Montre les différentes tables
