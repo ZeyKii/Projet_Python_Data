@@ -30,6 +30,22 @@ Le Million Playlist Dataset est créé en échantillonnant des playlists parmi l
  * N'a pas de titre offensant
  * N'a pas de titre orienté vers les adultes si la playlist a été créée par un utilisateur de moins de 18 ans
 
+## lancer le projet 🐍
+
+```python
+python3 integration.py
+```
+
+jusqu'ici rien de complexe mais comme on a utiliser duck db la ça se complique légerement
+
+```sql
+
+```
+
+
+
+
+
 ## 👥 Données démographiques générales des utilisateurs contribuant au MPD
 
 ### 🧑‍🤝‍🧑 Genre
