@@ -30,16 +30,22 @@ Le Million Playlist Dataset est créé en échantillonnant des playlists parmi l
  * N'a pas de titre offensant
  * N'a pas de titre orienté vers les adultes si la playlist a été créée par un utilisateur de moins de 18 ans
 
-## lancer le projet 🐍
+## 🐍 Lancer le projet
 
 ```python
 python3 integration.py
 ```
 
-jusqu'ici rien de complexe mais comme on a utiliser duck db la ça se complique légerement
+Jusqu'ici rien de complexe mais comme on a utiliser `DuckDB` voici les commandes utiles :
 
 ```sql
+.open "DB_NAME" //Ouvre le fichier de la DB
 
+SHOW tables; //Montre les différentes tables
+
+SELECT * FROM tracks; //Renvoie les informations de "tracks"
+
+.quit //Ferme la DB
 ```
 
 
