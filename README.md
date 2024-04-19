@@ -11,11 +11,6 @@ Le **Spotify Million Playlist Dataset** contient un million de playlists anonymi
 ## 🔬 Méthodologie
 Nous utiliserons principalement Python ainsi qu'une combinaison de techniques d'analyse exploratoire de données, de visualisation de données, de statistiques descriptives pour extraire des informations significatives des données de playlists Spotify. 🐍📊
 
-## 📂 Contenu du Répertoire
-- **notebooks/** : Ce répertoire contiendra les notebooks Jupyter utilisés pour l'analyse des données.
-- **results/** : Ce répertoire contiendra les résultats de l'analyse, tels que des graphiques, des tableaux récapitulatifs, etc.
-- **README.md** : Ce fichier README fournira une introduction au projet et des informations supplémentaires pertinentes.
-
 ## ℹ️ Informations sur le Dataset
 Le **Spotify Million Playlist Dataset** contient des données essentielles pour l'analyse de playlists Spotify. Voici quelques détails supplémentaires sur le dataset :
 Le MPD contient un million de playlists générées par les utilisateurs. Ces playlists ont été créées entre janvier 2010 et octobre 2017. Chaque playlist dans le MPD contient un titre de playlist, la liste des morceaux (incluant les métadonnées des morceaux), des informations d'édition (heure de la dernière édition, nombre d'éditions de playlist) et d'autres informations diverses sur la playlist.
